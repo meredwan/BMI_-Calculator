@@ -1,5 +1,7 @@
 import 'package:bmi_calculator_app/utils/custom_text.dart';
 import 'package:bmi_calculator_app/utils/custome_colors.dart';
+import 'package:bmi_calculator_app/views/screens/result.dart';
+import 'package:bmi_calculator_app/widgets/check_bmi_button.dart';
 import 'package:bmi_calculator_app/widgets/person_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +15,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool? ismale;
   double heightCm = 50;
   int Sum = 0;
+  int weight = 0;
+  int age = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +29,14 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: AppColor.PrimaryColor,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  heightCm = 50;
+                  weight = 0;
+                  age = 0;
+                  ismale = null;
+                });
+              },
               icon: Icon(
                 Icons.refresh,
                 color: Colors.white,
@@ -36,15 +48,35 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 personcard(
+                  onTap: () {
+                    setState(() {
+                      ismale = true;
+                    });
+                  },
                   data: 'MALE',
                   icon: Icons.male,
+                  iconColor: (ismale == true)
+                      ? const Color(0xffFF0C63)
+                      : const Color(0xffB2B9D5),
                 ),
                 const SizedBox(
                   width: 15,
                 ),
-                personcard(data: "FEMALE", icon: Icons.female)
+                personcard(
+                  onTap: () {
+                    setState(() {
+                      ismale = false;
+                    });
+                  },
+                  data: "FEMALE",
+                  icon: Icons.female,
+                  iconColor: (ismale == false)
+                      ? const Color(0xffFF0C63)
+                      : const Color(0xffB2B9D5),
+                )
               ],
             ),
             const SizedBox(
@@ -53,6 +85,7 @@ class _HomePageState extends State<HomePage> {
             Container(
               padding: EdgeInsets.only(top: 10, bottom: 10, left: 5, right: 5),
               width: double.infinity,
+              height: 180,
               decoration: BoxDecoration(
                 color: AppColor.SeconderyColor,
                 borderRadius: BorderRadius.circular(20),
@@ -89,7 +122,9 @@ class _HomePageState extends State<HomePage> {
                     max: 250,
                     value: heightCm,
                     onChanged: (value) {
-                      heightCm = value;
+                      setState(() {
+                        heightCm = value;
+                      });
                     },
                   ),
                 ],
@@ -110,14 +145,21 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         HeadingThree(data: "WEIGHT", textColor: Colors.grey),
-                        HeadingTwo(data: Sum.toString()),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        HeadingTwo(data: weight.toString()),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
                               style: IconButton.styleFrom(
                                   backgroundColor: AppColor.PrimaryColor),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  weight++;
+                                });
+                              },
                               icon: Icon(
                                 Icons.add,
                                 color: Colors.white,
@@ -126,7 +168,17 @@ class _HomePageState extends State<HomePage> {
                             IconButton(
                               style: IconButton.styleFrom(
                                   backgroundColor: AppColor.PrimaryColor),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  if (weight > 0) {
+                                    weight--;
+                                  } else {
+                                    SnackBar(
+                                      content: Text("Wrong Argument"),
+                                    );
+                                  }
+                                });
+                              },
                               icon: Icon(
                                 Icons.remove,
                                 color: Colors.white,
@@ -150,15 +202,22 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        HeadingThree(data: "WEIGHT", textColor: Colors.grey),
-                        HeadingTwo(data: Sum.toString()),
+                        HeadingThree(data: "AGE", textColor: Colors.grey),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        HeadingTwo(data: age.toString()),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
                               style: IconButton.styleFrom(
                                   backgroundColor: AppColor.PrimaryColor),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  age++;
+                                });
+                              },
                               icon: Icon(
                                 Icons.add,
                                 color: Colors.white,
@@ -167,7 +226,20 @@ class _HomePageState extends State<HomePage> {
                             IconButton(
                               style: IconButton.styleFrom(
                                   backgroundColor: AppColor.PrimaryColor),
-                              onPressed: () {},
+                              onPressed: () {
+                                setState(() {
+                                  if (age > 0) {
+                                    age--;
+                                  } else {
+                                    SnackBar(
+                                      content: Text(
+                                        "Wrong Argument",
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                    );
+                                  }
+                                });
+                              },
                               icon: Icon(
                                 Icons.remove,
                                 color: Colors.white,
@@ -180,6 +252,19 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            check_bmi(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShowResult(),
+                    ));
+              },
+              data: 'Check Your BMI',
             )
           ],
         ),
