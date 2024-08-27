@@ -16,6 +16,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(),
         title: 'BMI Calculator',
         debugShowCheckedModeBanner: false,
-        home: const HomePage());
+        home: const SplashScreen());
   }
 }

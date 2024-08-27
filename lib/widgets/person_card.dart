@@ -26,6 +26,7 @@ class _personcardState extends State<personcard> {
     return InkWell(
       onTap: widget.onTap,
       child: Expanded(
+        flex: 1,
         child: Container(
           height: 160,
           width: 160,

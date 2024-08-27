@@ -14,6 +14,11 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+double bmi = 0.0;
+String text = "";
+String widgetStatus = "";
+Color textColor = Colors.white;
+
 class _HomePageState extends State<HomePage> {
   bool? ismale;
   double heightCm = 50;
@@ -136,6 +141,7 @@ class _HomePageState extends State<HomePage> {
             Row(
               children: [
                 Expanded(
+                  flex: 1,
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
@@ -194,6 +200,7 @@ class _HomePageState extends State<HomePage> {
                   width: 20,
                 ),
                 Expanded(
+                  flex: 1,
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
@@ -258,6 +265,30 @@ class _HomePageState extends State<HomePage> {
             ),
             check_bmi(
               onTap: () {
+                if (ismale != null && weight != 0 && age != 0) {
+                  double heightM = heightCm / 100;
+                  bmi = weight / (heightM * heightM);
+                  if (bmi > 18.5) {
+                    widgetStatus = "UnderWeight";
+                    textColor = AppColor.ContentColor;
+
+                    text = "you Weight is too low eat some health food.";
+                  } else if (bmi > 18.5 && bmi < 24.9) {
+                    widgetStatus = "   Healthy Weight";
+                    textColor = AppColor.ContentColor;
+                    text = "you have a healthy body weight good job";
+                  } else if (bmi > 25 && bmi < 29.9) {
+                    widgetStatus = "Obesity";
+                    textColor = AppColor.ContentColor;
+                    text = "Your body is overweight keep doing workout.";
+                  } else {
+                    widgetStatus = "Obesity";
+                    text = "your Weight is too Heavy Go to Gym";
+                    textColor = AppColor.ContentColor;
+                  }
+                } else {
+                  SnackBar(content: Text("Please fill all inputs"));
+                }
                 Navigator.push(
                     context,
                     MaterialPageRoute(
